@@ -12,15 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class IndexController {
 
-    private final CategoryRepository categoryRepository;
     private final RecipeRepository recipeRepository;
-    private final UnitOfMeasureRepository unitOfMeasureRepository;
 
-    public IndexController(CategoryRepository categoryRepository, RecipeRepository recipeRepository,
-                           UnitOfMeasureRepository unitOfMeasureRepository) {
-        this.categoryRepository = categoryRepository;
+    public IndexController( RecipeRepository recipeRepository) {
         this.recipeRepository = recipeRepository;
-        this.unitOfMeasureRepository = unitOfMeasureRepository;
     }
 
     @RequestMapping("")
