@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipe Detail</title>
+</head>
+<body>
+<div class="container">
+    <div class="basic-info">
+        <div class="title">Recipe Descriptions</div>
+        <ul>
+            <li th:each="category : ${recipe.categories}">
+                <span th:text="${category.description}"></span>
+            </li>
+        </ul>
+        <table>
+            <tbody>
+            <tr>
+                <th>Prep Time</th>
+                <td th:text="${recipe.prepTime}"></td>
+                <th>Difficulty</th>
+                <td th:text="${recipe.difficulty}"></td>
+            </tr>
+            <tr>
+                <th>Cook Time</th>
+                <td th:text="${recipe.cookTime}"></td>
+                <th>Servings</th>
+                <td th:text="${recipe.servings}"></td>
+            </tr>
+            <tr>
+                <th>Source</th>
+                <td th:text="${recipe.source}"></td>
+                <th>URL</th>
+                <td th:text="${recipe.url}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="ingredients">
+        <div class="title">ingredients</div>
+        <ul>
+            <li th:each="ingredient : ${recipe.ingredients}">
+                <span th:text="${ingredient.description}"></span>
+            </li>
+        </ul>
+    </div>
+    <div class="directions">
+        <div class="title">directions</div>
+        <p th:text="${recipe.directions}"></p>
+    </div>
+    <div class="notes">
+        <div class="title">notes</div>
+        <p th:text="${recipe.notes}"></p>
+    </div>
+</div>
+</body>
+</html>
