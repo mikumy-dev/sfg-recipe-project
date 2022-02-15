@@ -2,56 +2,78 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap-theme.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <title>Recipe Detail</title>
 </head>
 <body>
 <div class="container">
-    <div class="basic-info">
+    <div class="box">
         <div class="title">Recipe Descriptions</div>
-        <ul>
-            <li th:each="category : ${recipe.categories}">
-                <span th:text="${category.description}"></span>
-            </li>
-        </ul>
-        <table>
-            <tbody>
-            <tr>
-                <th>Prep Time</th>
-                <td th:text="${recipe.prepTime}"></td>
-                <th>Difficulty</th>
-                <td th:text="${recipe.difficulty}"></td>
-            </tr>
-            <tr>
-                <th>Cook Time</th>
-                <td th:text="${recipe.cookTime}"></td>
-                <th>Servings</th>
-                <td th:text="${recipe.servings}"></td>
-            </tr>
-            <tr>
-                <th>Source</th>
-                <td th:text="${recipe.source}"></td>
-                <th>URL</th>
-                <td th:text="${recipe.url}"></td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="content">
+            <b>categories</b>
+            <ul>
+                <li th:each="category : ${recipe.categories}">
+                    <span th:text="${category.description}"></span>
+                </li>
+            </ul>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>Prep Time</th>
+                    <td th:text="${recipe.prepTime}"></td>
+                    <th>Difficulty</th>
+                    <td th:text="${recipe.difficulty}"></td>
+                </tr>
+                <tr>
+                    <th>Cook Time</th>
+                    <td th:text="${recipe.cookTime}"></td>
+                    <th>Servings</th>
+                    <td th:text="${recipe.servings}"></td>
+                </tr>
+                <tr>
+                    <th>Source</th>
+                    <td th:text="${recipe.source}"></td>
+                    <th>URL</th>
+                    <td th:text="${recipe.url}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
-    <div class="ingredients">
+    <div class="box">
         <div class="title">ingredients</div>
-        <ul>
-            <li th:each="ingredient : ${recipe.ingredients}">
-                <span th:text="${ingredient.description}"></span>
-            </li>
-        </ul>
+        <div class="content">
+            <ul>
+                <li th:each="ingredient : ${recipe.ingredients}">
+                    <span th:text="${ingredient.toString()}"></span>
+                </li>
+            </ul>
+        </div>
+
     </div>
-    <div class="directions">
+    <div class="box">
         <div class="title">directions</div>
-        <p th:text="${recipe.directions}"></p>
+        <div class="content">
+            <p th:text="${recipe.directions}"></p>
+        </div>
+
     </div>
-    <div class="notes">
+    <div class="box">
         <div class="title">notes</div>
-        <p th:text="${recipe.notes}"></p>
+        <div class="content">
+            <p th:text="${recipe.notes} == null ? '' : ${recipe.notes.recipeNotes}"></p>
+        </div>
+
     </div>
+    <a class="btn btn-primary" href="/" role="button">Back</a>
+
 </div>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/jquery-ui/jquery-ui.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 </body>
 </html>
