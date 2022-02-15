@@ -1,3 +1,36 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
 .thead-dark {
     background-color: lightgray;
+}
+
+.container {
+    padding: 10px;
+}
+
+.box {
+    border: solid 1px lightblue;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.box .content {
+    padding: 20px;
+}
+
+.title {
+    background-color: lightblue;
+    font-size: 20px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.box p {
+    line-height: 20px;
 }
