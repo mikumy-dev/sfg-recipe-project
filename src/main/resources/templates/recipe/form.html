@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap-theme.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Recipe Form</title>
+</head>
+<body>
+<div class="container">
+    <form action="/recipe/update">
+        <div class="box">
+            <div class="title">Recipe Descriptions</div>
+            <div class="content">
+                <div><b>Recipe Name</b>&nbsp;&nbsp;&nbsp;&nbsp;<input name="description" class="form-control"
+                                                                      th:value="${recipe.description}"></div>
+                <b>Categories</b>
+                <ul>
+                    <li th:each="category : ${recipe.categories}">
+                        <span th:text="${category.description}"></span>
+                    </li>
+                </ul>
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <th>Prep Time</th>
+                        <td><input name="prepTime" th:value="${recipe.prepTime}" type="text"></td>
+                        <th>Difficulty</th>
+                        <td th:text="${recipe.difficulty}"></td>
+                    </tr>
+                    <tr>
+                        <th>Cook Time</th>
+                        <td><input name="cookTime" th:value="${recipe.cookTime}" type="text"></td>
+                        <th>Servings</th>
+                        <td><input name="servings" th:value="${recipe.servings}" type="text"></td>
+                    </tr>
+                    <tr>
+                        <th>Source</th>
+                        <td><input name="source" th:value="${recipe.source}" type="text"></td>
+                        <th>URL</th>
+                        <td><input name="url" th:value="${recipe.url}" type="text"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="box">
+            <div class="title">ingredients</div>
+            <div class="content">
+                <ul>
+                    <li th:each="ingredient : ${recipe.ingredients}">
+                        <span th:text="${ingredient.toString()}"></span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="box">
+            <div class="title">directions</div>
+            <div class="content">
+                <textarea class="form-control" th:text="${recipe.directions}" rows="5"></textarea>
+            </div>
+
+        </div>
+        <div class="box">
+            <div class="title">notes</div>
+            <div class="content">
+                <textarea class="form-control"
+                          th:text="${recipe.notes} == null ? '' : ${recipe.notes.recipeNotes}" rows="5"></textarea>
+            </div>
+
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
+</div>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/jquery-ui/jquery-ui.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>
