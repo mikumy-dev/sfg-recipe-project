@@ -28,10 +28,4 @@ public class IndexController {
         log.debug("IndexController#index end");
         return "index";
     }
-
-    @RequestMapping("/show/{id}")
-    public String showRecipe(Model model, @PathVariable Long id) {
-        model.addAttribute("recipe", recipeRepository.findById(id).orElse(null));
-        return "recipe/show";
-    }
 }
