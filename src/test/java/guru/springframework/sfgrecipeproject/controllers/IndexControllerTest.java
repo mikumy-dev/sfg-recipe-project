@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class IndexControllerTest {
 
     @Mock
-    RecipeRepository recipeRepository;
+    RecipeService recipeService;
     @Mock
     Model model;
 
@@ -22,7 +22,7 @@ class IndexControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        indexController = new IndexController(recipeRepository);
+        indexController = new IndexController(recipeService);
     }
 
     @Test
