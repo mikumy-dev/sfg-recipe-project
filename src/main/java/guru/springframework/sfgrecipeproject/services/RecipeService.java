@@ -6,4 +6,7 @@ import java.util.Set;
 
 public interface RecipeService {
     Set<Recipe> findAll();
+    Recipe save(Recipe recipe);
+    Recipe findById(Long id);
+    Recipe saveWithoutCategoriesAndIngredients(Recipe recipe);
 }
