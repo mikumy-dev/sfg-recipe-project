@@ -28,4 +28,21 @@ public class RecipeServiceImpl implements RecipeService {
     public Recipe findById(Long id) {
         return recipeRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public Recipe saveWithoutCategoriesAndIngredients(Recipe recipe) {
+        if (recipe == null) {
+            return null;
+        }
+        if (recipe.getId() == null) {
+            return save(recipe);
+        }
+        Recipe oldRecipe = findById(recipe.getId());
+        if (oldRecipe == null) {
+            return save(recipe);
+        }
+        recipe.setCategories(oldRecipe.getCategories());
+        recipe.setIngredients(oldRecipe.getIngredients());
+        return save(recipe);
+    }
 }

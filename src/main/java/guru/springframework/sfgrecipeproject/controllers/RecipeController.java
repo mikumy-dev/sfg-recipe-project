@@ -39,7 +39,9 @@ public class RecipeController {
 
     @PostMapping("/update")
     public String createOrUpdateRecipe(@ModelAttribute Recipe recipe) {
-        Recipe recipeSaved = recipeService.save(recipe);
+        Recipe recipeSaved = recipeService.saveWithoutCategoriesAndIngredients(recipe);
         return "redirect:/recipe/show/" + recipeSaved.getId();
     }
+
+    public String updateRecipeCategories()
 }
