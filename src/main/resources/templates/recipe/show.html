@@ -12,7 +12,7 @@
         <div class="title">Recipe Descriptions</div>
         <div class="content">
             <div><b>Recipe Name</b>&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${recipe.description}"></span></div>
-            <b>Categories</b>&nbsp;&nbsp;<a href="">Edit</a>
+            <b>Categories</b>&nbsp;&nbsp;<a th:href="@{'/recipe/editCategories/'+${recipe.id}}">Edit</a>
             <ul>
                 <li th:each="category : ${recipe.categories}" th:text="${category.description}">
                 </li>

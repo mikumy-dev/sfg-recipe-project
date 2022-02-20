@@ -22,4 +22,9 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.findAll().forEach(category -> categories.add(category));
         return categories;
     }
+
+    @Override
+    public Category findById(Long id) {
+        return categoryRepository.findById(id).orElse(null);
+    }
 }
