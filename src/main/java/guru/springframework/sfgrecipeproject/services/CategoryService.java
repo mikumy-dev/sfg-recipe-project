@@ -6,4 +6,5 @@ import java.util.Set;
 
 public interface CategoryService {
     Set<Category> findAll();
+    Category findById(Long id);
 }
