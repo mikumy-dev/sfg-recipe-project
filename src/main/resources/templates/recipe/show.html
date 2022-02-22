@@ -50,6 +50,7 @@
                     <span th:text="${ingredient.toString()}"></span>
                 </li>
             </ul>
+            <a th:href="@{'/recipe/editIngredients/'+${recipe.id}}">Edit</a>
         </div>
 
     </div>

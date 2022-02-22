@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Edit Ingredients in Recipe</title>
+</head>
+<body>
+<div class="container">
+    <div class="box">
+        <div class="title">Edit Ingredients in Recipe</div>
+        <div class="content">
+            <form th:action="@{/recipe/updateRecipeIngredients}" th:object="${recipeIngredients}" method="post">
+                <input type="hidden" th:value="${recipeIngredients.getRecipeId()}" th:field="*{recipeId}">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Amount</th>
+                        <th>Unit of Measure</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="ingredient, stat : *{ingredients}">
+                        <td><input type="hidden" th:value="${ingredient.getId()}" th:field="*{ingredients[__${stat.index}__].id}">
+                            <input class="form-control" type="text" th:value="${ingredient.getAmount()}" th:field="*{ingredients[__${stat.index}__].amount}"></td>
+                        <td><select class="form-control" th:field="*{ingredients[__${stat.index}__].uom.id}">
+                            <!-- th:field doesn't work with th:selected-->
+                            <option th:each="unitOfMeasure : ${unitOfMeasureList}"
+                                    th:class="(${unitOfMeasure.description}==${ingredient.uom.description} ? 'selected')"
+                                    th:value="${unitOfMeasure.id}"
+                                    th:text="${unitOfMeasure.description}"></option>
+                        </select>
+                        </td>
+                        <td><input class="form-control" type="text" th:value="${ingredient.getDescription()}" th:field="*{ingredients[__${stat.index}__].description}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" type="submit">submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script>
+    let options = document.querySelectorAll('option.selected')
+    options.forEach((item) => {
+        item.selected=true
+    })
+</script>
+</body>
+</html>
