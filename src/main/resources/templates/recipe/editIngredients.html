@@ -12,7 +12,7 @@
         <div class="title">Edit Ingredients in Recipe</div>
         <div class="content">
             <form th:action="@{/recipe/updateRecipeIngredients}" th:object="${recipeIngredients}" method="post">
-                <input type="hidden" th:value="${recipeIngredients.getRecipeId()}" th:field="*{recipeId}">
+                <input type="hidden" class="recipeId" th:value="${recipeIngredients.getRecipeId()}" th:field="*{recipeId}">
                 <table class="table">
                     <thead>
                     <tr>
@@ -21,11 +21,13 @@
                         <th>Description</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="ingredient, stat : *{ingredients}">
-                        <td><input type="hidden" th:value="${ingredient.getId()}" th:field="*{ingredients[__${stat.index}__].id}">
-                            <input class="form-control" type="text" th:value="${ingredient.getAmount()}" th:field="*{ingredients[__${stat.index}__].amount}"></td>
-                        <td><select class="form-control" th:field="*{ingredients[__${stat.index}__].uom.id}">
+                    <tbody class="ingredient-body">
+                    <tr class="ingredient-row" th:each="ingredient, stat : *{ingredients}">
+                        <td><input type="hidden" class="ingredient-id" th:value="${ingredient.getId()}"
+                                   th:field="*{ingredients[__${stat.index}__].id}">
+                            <input class="form-control ingredient-amount" type="text" th:value="${ingredient.getAmount()}"
+                                   th:field="*{ingredients[__${stat.index}__].amount}"></td>
+                        <td><select class="form-control ingredient-uom-id" th:field="*{ingredients[__${stat.index}__].uom.id}">
                             <!-- th:field doesn't work with th:selected-->
                             <option th:each="unitOfMeasure : ${unitOfMeasureList}"
                                     th:class="(${unitOfMeasure.description}==${ingredient.uom.description} ? 'selected')"
@@ -33,10 +35,13 @@
                                     th:text="${unitOfMeasure.description}"></option>
                         </select>
                         </td>
-                        <td><input class="form-control" type="text" th:value="${ingredient.getDescription()}" th:field="*{ingredients[__${stat.index}__].description}"></td>
+                        <td><input class="form-control ingredient-description" type="text" th:value="${ingredient.getDescription()}"
+                                   th:field="*{ingredients[__${stat.index}__].description}"></td>
                     </tr>
                     </tbody>
                 </table>
+                <button type="button" class="btn btn-primary" onclick="addIngredientRow()">Add an ingredient</button>
+                <button type="button" class="btn btn-primary" onclick="toJSON()">toJSON</button>
                 <button class="btn btn-primary" type="submit">submit</button>
             </form>
         </div>
@@ -50,6 +55,38 @@
     options.forEach((item) => {
         item.selected=true
     })
+
+    function toJSON() {
+        let recipeIngredients = {
+            recipeId: $('.recipeId').val(),
+            ingredients: []
+        }
+        let tableRows = document.querySelectorAll('.ingredient-row')
+        tableRows.forEach((row, idx) => {
+            let ingredient = {
+                "id": $(row).find('.ingredient-id').val(),
+                "amount": $(row).find('.ingredient-amount').val(),
+                "uom": {
+                    "id": $(row).find('.ingredient-uom-id').val()
+                },
+                "description": $(row).find('.ingredient-description').val()
+            }
+            recipeIngredients.ingredients.push(ingredient)
+        })
+        console.log(JSON.stringify(recipeIngredients))
+    }
+
+    function addIngredientRow() {
+        // implement later
+        let tbody = document.querySelector('.ingredient-body')
+        let newRow = tbody.insertRow(-1)
+
+        newRow.appendChild(document.createElement('td').appendChild(document.createElement('input')))
+        newRow.appendChild(document.createElement('td').appendChild(document.createElement('input')))
+        newRow.appendChild(document.createElement('td').appendChild(document.createElement('input')))
+
+        console.log(newRow)
+    }
 </script>
 </body>
 </html>
