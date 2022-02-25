@@ -22,21 +22,21 @@
                     </tr>
                     </thead>
                     <tbody class="ingredient-body">
-                    <tr class="ingredient-row" th:each="ingredient, stat : *{ingredients}">
-                        <td><input type="hidden" class="ingredient-id" th:value="${ingredient.getId()}"
-                                   th:field="*{ingredients[__${stat.index}__].id}">
-                            <input class="form-control ingredient-amount" type="text" th:value="${ingredient.getAmount()}"
-                                   th:field="*{ingredients[__${stat.index}__].amount}"></td>
-                        <td><select class="form-control ingredient-uom-id" th:field="*{ingredients[__${stat.index}__].uom.id}">
+                    <tr class="ingredient-row" th:each="ingredientCommand, stat : *{ingredientCommandList}">
+                        <td><input type="hidden" class="ingredient-id" th:value="${ingredientCommand.getId()}"
+                                   th:field="*{ingredientCommandList[__${stat.index}__].id}">
+                            <input class="form-control ingredient-amount" type="text" th:value="${ingredientCommand.getAmount()}"
+                                   th:field="*{ingredientCommandList[__${stat.index}__].amount}"></td>
+                        <td><select class="form-control ingredient-uom-id" th:field="*{ingredientCommandList[__${stat.index}__].uomId}">
                             <!-- th:field doesn't work with th:selected-->
                             <option th:each="unitOfMeasure : ${unitOfMeasureList}"
-                                    th:class="(${unitOfMeasure.description}==${ingredient.uom.description} ? 'selected')"
+                                    th:class="(${unitOfMeasure.id}==${ingredientCommand.uomId} ? 'selected')"
                                     th:value="${unitOfMeasure.id}"
                                     th:text="${unitOfMeasure.description}"></option>
                         </select>
                         </td>
-                        <td><input class="form-control ingredient-description" type="text" th:value="${ingredient.getDescription()}"
-                                   th:field="*{ingredients[__${stat.index}__].description}"></td>
+                        <td><input class="form-control ingredient-description" type="text" th:value="${ingredientCommand.getDescription()}"
+                                   th:field="*{ingredientCommandList[__${stat.index}__].description}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -66,9 +66,7 @@
             let ingredient = {
                 "id": $(row).find('.ingredient-id').val(),
                 "amount": $(row).find('.ingredient-amount').val(),
-                "uom": {
-                    "id": $(row).find('.ingredient-uom-id').val()
-                },
+                "uomId": $(row).find('.ingredient-uom-id').val(),
                 "description": $(row).find('.ingredient-description').val()
             }
             recipeIngredients.ingredients.push(ingredient)
