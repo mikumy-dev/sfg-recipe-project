@@ -1,11 +1,16 @@
 package guru.springframework.sfgrecipeproject.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import guru.springframework.sfgrecipeproject.command.IngredientCommand;
 import guru.springframework.sfgrecipeproject.command.RecipeCategories;
 import guru.springframework.sfgrecipeproject.command.RecipeIngredients;
+import guru.springframework.sfgrecipeproject.converters.IngredientConverter;
 import guru.springframework.sfgrecipeproject.domain.*;
 import guru.springframework.sfgrecipeproject.services.CategoryService;
 import guru.springframework.sfgrecipeproject.services.RecipeService;
 import guru.springframework.sfgrecipeproject.services.UnitOfMeasureService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Controller
 @RequestMapping("/recipe")
 public class RecipeController {
@@ -81,27 +87,34 @@ public class RecipeController {
         Recipe recipe = recipeService.findById(id);
         RecipeIngredients recipeIngredients = new RecipeIngredients();
         recipeIngredients.setRecipeId(recipe.getId());
-        List<Ingredient> ingredientList = new ArrayList<>();
-        recipe.getIngredients().forEach(ingredient -> ingredientList.add(ingredient));
-        recipeIngredients.setIngredients(ingredientList);
+        List<IngredientCommand> ingredientCommandList = new ArrayList<>();
+        recipe.getIngredients().forEach(ingredient -> {
+            ingredientCommandList.add(IngredientConverter.convert(ingredient));
+        });
+        recipeIngredients.setIngredientCommandList(ingredientCommandList);
         model.addAttribute("recipeIngredients", recipeIngredients);
 
         List<UnitOfMeasure> unitOfMeasureList = unitOfMeasureService.findAll();
         model.addAttribute("unitOfMeasureList", unitOfMeasureList);
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String json = mapper.writeValueAsString(recipeIngredients);
+            log.debug(json);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         return "recipe/editIngredients";
     }
 
     @PostMapping("/updateRecipeIngredients")
     public String updateRecipeIngredients(@ModelAttribute RecipeIngredients recipeIngredients) {
         Recipe recipe = recipeService.findById(recipeIngredients.getRecipeId());
-        List<Ingredient> ingredients = recipeIngredients.getIngredients();
+        List<IngredientCommand> ingredientCommandList = recipeIngredients.getIngredientCommandList();
         Set<Ingredient> ingredientSet = new HashSet<>();
-        ingredients.forEach(ingredient -> {
-            Ingredient ingredientToSave = new Ingredient();
-            ingredientToSave.setId(ingredient.getId());
-            ingredientToSave.setAmount(ingredient.getAmount());
-            ingredientToSave.setDescription(ingredient.getDescription());
-            ingredientToSave.setUom(unitOfMeasureService.findById(ingredient.getUom().getId()));
+        ingredientCommandList.forEach(ingredientCommand -> {
+            Ingredient ingredientToSave = IngredientConverter.convert(ingredientCommand);
+            ingredientToSave.setUom(unitOfMeasureService.findById(ingredientCommand.getUomId()));
             ingredientToSave.setRecipe(recipe);
             ingredientSet.add(ingredientToSave);
         });
