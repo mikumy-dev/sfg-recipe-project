@@ -13,10 +13,7 @@ import guru.springframework.sfgrecipeproject.services.UnitOfMeasureService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -107,8 +104,9 @@ public class RecipeController {
         return "recipe/editIngredients";
     }
 
-    @PostMapping("/updateRecipeIngredients")
-    public String updateRecipeIngredients(@ModelAttribute RecipeIngredients recipeIngredients) {
+    @ResponseBody
+    @RequestMapping("/updateRecipeIngredients")
+    public String updateRecipeIngredients(@RequestBody RecipeIngredients recipeIngredients) {
         Recipe recipe = recipeService.findById(recipeIngredients.getRecipeId());
         List<IngredientCommand> ingredientCommandList = recipeIngredients.getIngredientCommandList();
         Set<Ingredient> ingredientSet = new HashSet<>();
@@ -121,6 +119,7 @@ public class RecipeController {
 
         recipe.setIngredients(ingredientSet);
         Recipe recipeSaved = recipeService.save(recipe);
-        return "redirect:/recipe/show/" + recipeSaved.getId();
+        // return an empty json
+        return "{}";
     }
 }
