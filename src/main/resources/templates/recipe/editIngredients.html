@@ -11,8 +11,8 @@
     <div class="box">
         <div class="title">Edit Ingredients in Recipe</div>
         <div class="content">
-            <form th:action="@{/recipe/updateRecipeIngredients}" th:object="${recipeIngredients}" method="post">
-                <input type="hidden" class="recipeId" th:value="${recipeIngredients.getRecipeId()}" th:field="*{recipeId}">
+            <form>
+                <input type="hidden" class="recipeId" th:value="${recipeIngredients.getRecipeId()}">
                 <table class="table">
                     <thead>
                     <tr>
@@ -22,27 +22,23 @@
                     </tr>
                     </thead>
                     <tbody class="ingredient-body">
-                    <tr class="ingredient-row" th:each="ingredientCommand, stat : *{ingredientCommandList}">
-                        <td><input type="hidden" class="ingredient-id" th:value="${ingredientCommand.getId()}"
-                                   th:field="*{ingredientCommandList[__${stat.index}__].id}">
-                            <input class="form-control ingredient-amount" type="text" th:value="${ingredientCommand.getAmount()}"
-                                   th:field="*{ingredientCommandList[__${stat.index}__].amount}"></td>
-                        <td><select class="form-control ingredient-uom-id" th:field="*{ingredientCommandList[__${stat.index}__].uomId}">
+                    <tr class="ingredient-row" th:each="ingredientCommand : ${recipeIngredients.ingredientCommandList}">
+                        <td><input type="hidden" class="ingredient-id" th:value="${ingredientCommand.getId()}">
+                            <input class="form-control ingredient-amount" type="text" th:value="${ingredientCommand.getAmount()}"></td>
+                        <td><select class="form-control ingredient-uom-id">
                             <!-- th:field doesn't work with th:selected-->
                             <option th:each="unitOfMeasure : ${unitOfMeasureList}"
-                                    th:class="(${unitOfMeasure.id}==${ingredientCommand.uomId} ? 'selected')"
+                                    th:selected="${unitOfMeasure.id}==${ingredientCommand.uomId}"
                                     th:value="${unitOfMeasure.id}"
                                     th:text="${unitOfMeasure.description}"></option>
                         </select>
                         </td>
-                        <td><input class="form-control ingredient-description" type="text" th:value="${ingredientCommand.getDescription()}"
-                                   th:field="*{ingredientCommandList[__${stat.index}__].description}"></td>
+                        <td><input class="form-control ingredient-description" type="text" th:value="${ingredientCommand.getDescription()}"></td>
                     </tr>
                     </tbody>
                 </table>
                 <button type="button" class="btn btn-primary" onclick="addIngredientRow()">Add an ingredient</button>
-                <button type="button" class="btn btn-primary" onclick="toJSON()">toJSON</button>
-                <button class="btn btn-primary" type="submit">submit</button>
+                <button type="button" class="btn btn-primary" onclick="toJSON()">submit</button>
             </form>
         </div>
     </div>
@@ -51,15 +47,10 @@
 <script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <script>
-    let options = document.querySelectorAll('option.selected')
-    options.forEach((item) => {
-        item.selected=true
-    })
-
     function toJSON() {
         let recipeIngredients = {
             recipeId: $('.recipeId').val(),
-            ingredients: []
+            ingredientCommandList: []
         }
         let tableRows = document.querySelectorAll('.ingredient-row')
         tableRows.forEach((row, idx) => {
@@ -69,21 +60,41 @@
                 "uomId": $(row).find('.ingredient-uom-id').val(),
                 "description": $(row).find('.ingredient-description').val()
             }
-            recipeIngredients.ingredients.push(ingredient)
+            recipeIngredients.ingredientCommandList.push(ingredient)
         })
-        console.log(JSON.stringify(recipeIngredients))
+        // console.log(JSON.stringify(recipeIngredients))
+        // return JSON.stringify(recipeIngredients)
+        $.ajax({
+            type: "POST",
+            url: "/recipe/updateRecipeIngredients",
+            data: JSON.stringify(recipeIngredients),
+            dataType:"json",
+            contentType : 'application/json;charset=utf-8',
+            success: function(msg){
+                window.location.href='/recipe/show/'+$('.recipeId').val()
+            },
+            error: function (xhr,status,error) {
+                console.log(xhr)
+                console.log(status)
+                console.log(error)
+            }
+        })
     }
 
     function addIngredientRow() {
-        // implement later
+        // copy a row and append to tbody
         let tbody = document.querySelector('.ingredient-body')
-        let newRow = tbody.insertRow(-1)
-
-        newRow.appendChild(document.createElement('td').appendChild(document.createElement('input')))
-        newRow.appendChild(document.createElement('td').appendChild(document.createElement('input')))
-        newRow.appendChild(document.createElement('td').appendChild(document.createElement('input')))
-
+        let row = document.querySelector('.ingredient-row')
+        let newRow = document.createElement('tr')
+        newRow.setAttribute('class', 'ingredient-row')
+        newRow.innerHTML = row.innerHTML
+        // value reset
+        $(newRow).find('.ingredient-id').val('')
+        $(newRow).find('.ingredient-amount').val('')
+        $(newRow).find('.ingredient-uom-id').val(1)
+        $(newRow).find('.ingredient-description').val('')
         console.log(newRow)
+        $(tbody).append(newRow)
     }
 </script>
 </body>
